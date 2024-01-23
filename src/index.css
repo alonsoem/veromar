@@ -11,3 +11,20 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.headerSearch{
+  
+  display: -ms-flexbox;
+  display: flex;
+  margin:0;
+  -ms-flex-pack: center;
+      justify-content: center;
+  -ms-flex-align: center;
+      align-items: center;
+  font-family: 'Poppins', sans-serif;
+  background: url("http://localhost:3000/images/Searchs_006.png")!important;
+  background-size: cover;
+  background-position: center center;
+  padding: 15px;
+
+}
