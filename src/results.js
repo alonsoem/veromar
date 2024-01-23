@@ -82,7 +82,7 @@ function Results() {
                         <div class="spinner-border" role="status">
                             <span class="visually-hidden">Cargando...</span>
                         </div>
-                        <p class="m-2"> Aguarde un instante...</p>
+                        <p class="m-2"> Aguarde un instante... </p>
                     </div>
                     </div>);
         }else{
