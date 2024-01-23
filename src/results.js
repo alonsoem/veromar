@@ -4,7 +4,7 @@ import { useState,useEffect} from 'react';
 import { getProducts } from './api/api';
 import {Form, Row} from "react-bootstrap";
 import { useParams} from "react-router-dom";
-import {useNavigate} from 'react-router-dom';
+
 
 
 
@@ -16,15 +16,10 @@ function Results() {
 	const [ products, setProducts] = useState([]);
 	const [ queryString, setQueryString ] = useState("");
     const [ loading, setLoading ] = useState(false);
-    const navigate = useNavigate();
+    
 
 
-    const navigateToStationQso = (station) => {
-        if (station){
-            navigate('/qsoList/'+station);
-        }
-    };
-
+   
  
     useEffect(() => {
 
@@ -76,22 +71,6 @@ function Results() {
       }
 
 
-	const qsl = (qsl) =>{
-		// eslint-disable-next-line
-		if (qsl.status=="RC Confirmed"){
-            
-			return (
-                <badge class="badge text-bg-warning  text-center" role="button"  >
-                        Descargar QSL
-                </badge>
-            	);
-        // eslint-disable-next-line
-        }else if (qsl.status=="Confirmed"){
-            return ("Confirmado");
-		}else{
-			return "-";
-		}
-    }
 
 
 
