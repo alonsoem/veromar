@@ -104,6 +104,7 @@ function Results() {
         e.preventDefault();
         loadData(queryString);
         loadData2(queryString);
+        loadData3(queryString);
     }
 
     const handleChangeQuery = (event) => {
