@@ -1,12 +1,13 @@
 import React from 'react';
 
 import { useState,useEffect} from 'react';
-import { getProducts, getProducts2 } from './api/api';
+import { getProducts, getProducts2,getProducts3 } from './api/api';
 
 import { useParams} from "react-router-dom";
 import './assets/main.css';
 
 import ckfImage from './assets/ckf.jpg'
+import tangoImage from './assets/tango.jpg'
 import ferriplastImage from './assets/ferriplast.jpg'
 
 
@@ -18,11 +19,13 @@ function Results() {
     const {query} = useParams();
 	const [ products, setProducts] = useState([]);
     const [ products2, setProducts2] = useState([]);
+    const [ products3, setProducts3] = useState([]);
     
 	const [ queryString, setQueryString ] = useState("");
     const [ loading, setLoading ] = useState(false);
     const [ loadingSub1, setLoadingSub1 ] = useState(false);
     const [ loadingSub2, setLoadingSub2 ] = useState(false);
+    const [ loadingSub3, setLoadingSub3 ] = useState(false);
     
 
 
@@ -34,6 +37,7 @@ function Results() {
            
            loadData(query);
            loadData2(query);
+           loadData3(query);
            setQueryString(query);
         }
         // eslint-disable-next-line
@@ -41,14 +45,14 @@ function Results() {
 
     useEffect(() => {
 
-        if (loadingSub1 || loadingSub2){
+        if (loadingSub1 || loadingSub2 || loadingSub3){
            
            setLoading(true);
         }else{
             setLoading(false);
         }
         // eslint-disable-next-line
-    }, [loadingSub1,loadingSub2] )
+    }, [loadingSub1,loadingSub2,loadingSub3] )
 
   
 
@@ -79,6 +83,21 @@ function Results() {
       })
       .catch((response) => handleAxiosError(response));
     }
+    const loadData3 =(queryString)=> {
+        
+        setLoadingSub3(true);
+        getProducts3({des:queryString})
+        .then((response) => {
+            
+            setProducts3(response);
+
+            setLoadingSub3(false);
+          
+      })
+      .catch((response) => handleAxiosError(response));
+    }
+
+
 
 
     const handleSubmit=(e)=>{
@@ -180,6 +199,32 @@ function Results() {
                                         <td class="text-center">{each.description}</td>
                                         <td class="text-center">{each.price}</td>
                                         <td class="text-center">{Number((each.price*1.25).toFixed(2))}</td>
+                                        <td class="text-center">{each.typeQty}</td>
+                                    </tr>
+                                )
+                            }   )}
+                        </tbody>
+                    </table>
+
+                    <div><img src={tangoImage} alt="TANGO" style={{ height: "60px" }} /></div>
+                    <table class="table striped hover bordered responsive mt-3 border">
+                        <thead>
+                            <tr class="table-primary">
+                                {products3.titles.map((each) =>{
+                                    return (
+                                        <th scope="col" class="text-center">{each}</th>
+                                    );
+                                })}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {products3.products.map((each) =>{
+                                return ( 
+                                    <tr>
+                                        <td class="text-center">{each.code}</td>
+                                        <td class="text-center">{each.description}</td>
+                                        <td class="text-center">{each.price}</td>
+                                        <td class="text-center">{Number((each.price*1.5).toFixed(2))}</td>
                                         <td class="text-center">{each.typeQty}</td>
                                     </tr>
                                 )
