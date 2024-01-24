@@ -1,13 +1,27 @@
 import React from 'react';
+import {useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
 
 
 
 
 function App() {
+
+  const [query, setQuery] =useState([]);
+  const navigate = useNavigate();
+
+  const handleChangeQuery=(e)=>{
+    setQuery(e.target.value);
+  }
+  const handleSubmit = (e) => {
+    navigate("/results/"+query);
+  }
+
   return (
     <div class="s006">
     <div className="App">
-          <form>
+    <form onSubmit={handleSubmit}>
         <fieldset>
           <legend>Que precio querés consultar?</legend>
           <div class="inner-form">
@@ -18,7 +32,8 @@ function App() {
                 </svg>
               </button>
               
-              <input id="search" type="text" placeholder="" value="" />
+              <input id="search" type="text" placeholder="" value={query} onChange={handleChangeQuery} />
+              <input type="submit" hidden />
             </div>
           </div>
           <div class="suggestion-wrap">
@@ -38,3 +53,4 @@ function App() {
 }
 
 export default App;
+

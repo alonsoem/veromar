@@ -14,6 +14,7 @@ function Results() {
 
     const {query} = useParams();
 	const [ products, setProducts] = useState([]);
+    
 	const [ queryString, setQueryString ] = useState("");
     const [ loading, setLoading ] = useState(false);
     
@@ -24,16 +25,14 @@ function Results() {
     useEffect(() => {
 
         if (query){
-            setQueryString(query);
-           //loadData(query);
+           
+           loadData(query);
+           setQueryString(query);
         }
         // eslint-disable-next-line
-        }, [query]
-        )
+    }, [] )
 
-    const handleSearch =()=>{
-        loadData(queryString);
-    }
+  
 
     const loadData =(queryString)=> {
         
@@ -42,16 +41,22 @@ function Results() {
         .then((response) => {
             
             setProducts(response);
+
             setLoading(false);
           
       })
       .catch((response) => handleAxiosError(response));
     }
-    const handleChangeCallsign = (event) => {
-        setQueryString(event.target.value);
-        
 
+    const handleSubmit=(e)=>{
+        e.preventDefault();
+        loadData(queryString);
+    }
+
+    const handleChangeQuery = (event) => {
+        setQueryString(event.target.value);
     };
+
     const handleAxiosError = (response) => {
         setLoading(false);
         //let errorToDisplay = "OCURRIO UN ERROR! VERIFIQUE NUEVAMENTE A LA BREVEDAD";
@@ -93,32 +98,30 @@ function Results() {
             }else{
         
                 return (
-            <table class="table striped hover bordered responsive mt-3 border">
-                <thead>
-                <tr class="table-primary">
-                {products.titles.map((each) =>{
-                    return (
-                        <th scope="col" class="text-center">{each}</th>
-                    );
-                })}
-                    
-                    </tr>
-                </thead>
-            <tbody>
-            {products.products.map((each) =>{
-                 return ( 
-                  <tr>
-                    <td class="text-center">{each.code}</td>
-                    <td class="text-center">{each.description}</td>
-                    <td class="text-center">{each.price}</td>
-                    <td class="text-center">{each.typeQty}</td>
-                  </tr>
-                 )
-            
-                }   )}
-        
-        </tbody>
-      </table>);
+                    <table class="table striped hover bordered responsive mt-3 border">
+                        <thead>
+                            <tr class="table-primary">
+                                {products.titles.map((each) =>{
+                                    return (
+                                        <th scope="col" class="text-center">{each}</th>
+                                    );
+                                })}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {products.products.map((each) =>{
+                                return ( 
+                                    <tr>
+                                        <td class="text-center">{each.code}</td>
+                                        <td class="text-center">{each.description}</td>
+                                        <td class="text-center">{each.price}</td>
+                                        <td class="text-center">{Number((each.price*1.1).toFixed(2))}</td>
+                                        <td class="text-center">{each.typeQty}</td>
+                                    </tr>
+                                )
+                            }   )}
+                        </tbody>
+                    </table>);
             }
       }
         
@@ -137,19 +140,19 @@ function Results() {
                     <div className="card mt-3 col-6" style={{'background-color': 'grey'}}>
                         
                         <div className="card-body" >
+                            <form onSubmit={handleSubmit}>
                             <Row className="mb-3">
                                 <Form.Group className="mb-3" controlId="callSignValue">
                                     
-                                    <Form.Control onChange={handleChangeCallsign}  value={queryString} type="text"
+                                    <Form.Control onChange={handleChangeQuery}  value={queryString} type="text"
                                         className="form-control" />
                                 </Form.Group>
                             </Row>
-                            <div className=" row float-end">
-                                <div class="col-6 text-end">
-                                    <button class="btn btn-success" onClick={handleSearch}>Buscar</button>
-                                </div>
-                                
-                            </div>
+                       
+                                    
+                            <input type="submit" hidden />
+                             
+                            </form>
                         </div>
                     </div>
             
