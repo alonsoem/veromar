@@ -171,7 +171,7 @@ function Results() {
                                         <td class="text-center">{each.code}</td>
                                         <td class="text-center">{each.description}</td>
                                         <td class="text-center">{each.price}</td>
-                                        <td class="text-center">{Number((each.price*1.1).toFixed(2))}</td>
+                                        <td class="text-center">{Number((each.price*0.61*1.21+1.40).toFixed(2))}</td>
                                         <td class="text-center">{each.typeQty}</td>
                                     </tr>
                                 )
@@ -198,7 +198,7 @@ function Results() {
                                         <td class="text-center">{each.code}</td>
                                         <td class="text-center">{each.description}</td>
                                         <td class="text-center">{each.price}</td>
-                                        <td class="text-center">{Number((each.price*1.25).toFixed(2))}</td>
+                                        <td class="text-center">{Number((each.price*0.5*1.21*1.40).toFixed(2))}</td>
                                         <td class="text-center">{each.typeQty}</td>
                                     </tr>
                                 )
@@ -224,7 +224,7 @@ function Results() {
                                         <td class="text-center">{each.code}</td>
                                         <td class="text-center">{each.description}</td>
                                         <td class="text-center">{each.price}</td>
-                                        <td class="text-center">{Number((each.price*1.5).toFixed(2))}</td>
+                                        <td class="text-center">{Number((each.price*0.6251*1.21*1.4).toFixed(2))}</td>
                                         <td class="text-center">{each.typeQty}</td>
                                     </tr>
                                 )
