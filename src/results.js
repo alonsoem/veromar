@@ -2,7 +2,7 @@ import React from 'react';
 
 import { useState,useEffect} from 'react';
 import { getProducts } from './api/api';
-import {Form, Row} from "react-bootstrap";
+
 import { useParams} from "react-router-dom";
 import './assets/main.css';
 
