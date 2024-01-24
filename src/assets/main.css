@@ -826,6 +826,21 @@ legend {
   padding: 15px;
 }
 
+.s007 {
+  
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-pack: center;
+      justify-content: center;
+  -ms-flex-align: center;
+      align-items: center;
+  font-family: 'Poppins', sans-serif;
+  background: url("./Searchs_006.png");
+  background-size: cover;
+  background-position: center center;
+  padding: 15px;
+}
+
 
 
 .s006 form {
