@@ -135,10 +135,6 @@ function Results() {
         
       }
 
-
-
-
-
     function ActivityTable(){
         
         if (loading){
@@ -159,16 +155,23 @@ function Results() {
         
                 return(
                     <div>
+                        
                         {productsNew.map((eachProdList,index)=>{
                             // eslint-disable-next-line
-                            if (eachProdList.length==0){
-                                return (<div>NO HAY RESULTADOS</div>);
+                            
+                            if (eachProdList.length==0 ){
+                                return (
+                                    <div>
+                                        <div><img src={"/images/"+providers[index].image} alt={providers[index].name} style={{ height: "60px" }} /></div>
+                                        <div class="text-center">NO HAY RESULTADOS</div>
+                                    </div>
+                                );
                             }else{
                         return (
                             
 
                             <div>
-                            <div><img src={"/images/"+providers[index].image} alt={providers[index].name} style={{ height: "60px" }} /></div>
+                                <div><img src={"/images/"+providers[index].image} alt={providers[index].name} style={{ height: "60px" }} /></div>
                                 <table class="table striped hover bordered responsive mt-3 border">
                                     <thead>
                                         <tr class="table-primary">
