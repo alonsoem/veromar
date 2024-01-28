@@ -1,110 +1,126 @@
 import React from 'react';
 
 import { useState,useEffect} from 'react';
-import { getProducts, getProducts2,getProducts3 } from './api/api';
+import { getProductsNew,getProviders } from './api/api';
 
 import { useParams} from "react-router-dom";
 import './assets/main.css';
-
-import ckfImage from './assets/ckf.jpg'
-import tangoImage from './assets/tango.jpg'
-import ferriplastImage from './assets/ferriplast.jpg'
-
-
-
 
 
 function Results() {
 
     const {query} = useParams();
-	const [ products, setProducts] = useState([]);
-    const [ products2, setProducts2] = useState([]);
-    const [ products3, setProducts3] = useState([]);
-    
-	const [ queryString, setQueryString ] = useState("");
+    const [ providers, setProviders] = useState([]);
+    const [ queryString, setQueryString ] = useState("");
+
+    const [ productsNew, setProductsNew] = useState([]);
+	
     const [ loading, setLoading ] = useState(false);
-    const [ loadingSub1, setLoadingSub1 ] = useState(false);
-    const [ loadingSub2, setLoadingSub2 ] = useState(false);
-    const [ loadingSub3, setLoadingSub3 ] = useState(false);
     
+    const calculate=(value,calculus)=>{
+        var expression=calculus.replace("price",value);
+        // eslint-disable-next-line
+        return eval(expression);
 
-
-   
- 
+    }
+    
     useEffect(() => {
 
+        console.log ("PROD NEW:");
+        console.log(productsNew);
+        // eslint-disable-next-line
+    }, [productsNew] )
+
+  
+
+   
+    const addNewProductList=()=>{
+        productsNew.push([]);
+        setProductsNew(productsNew);    
+    }
+  
+    useEffect(() => {
         if (query){
-           
-           loadData(query);
-           loadData2(query);
-           loadData3(query);
-           setQueryString(query);
+            setLoading(true);
+            loadProvidersWithData();
+            setLoading(false);
+            setQueryString(query);
+
+        }else{
+            loadProviders()
         }
         // eslint-disable-next-line
     }, [] )
 
-    useEffect(() => {
 
-        if (loadingSub1 || loadingSub2 || loadingSub3){
-           
-           setLoading(true);
-        }else{
-            setLoading(false);
-        }
-        // eslint-disable-next-line
-    }, [loadingSub1,loadingSub2,loadingSub3] )
 
-  
-
-    const loadData =(queryString)=> {
-        
-        setLoadingSub1(true);
-        getProducts({des:queryString})
+    const loadProvidersWithData=()=>{
+        getProviders()
         .then((response) => {
             
-            setProducts(response);
-
-            setLoadingSub1(false);
+            setProviders(response.providers);
+            response.providers.forEach((provider)=>{
+                var index=productsNew.length;
+                addNewProductList()
+                loadData(index,provider.id,query);
+                
+                }
+            )
           
       })
       .catch((response) => handleAxiosError(response));
     }
 
-    const loadData2 =(queryString)=> {
+    const loadProviders=()=>{
+        console.log("LOADING PROVIDERS");
         
-        setLoadingSub2(true);
-        getProducts2({des:queryString})
+        getProviders()
         .then((response) => {
             
-            setProducts2(response);
+            setProviders(response.providers);
+            response.providers.forEach((provider)=>{
 
-            setLoadingSub2(false);
-          
-      })
-      .catch((response) => handleAxiosError(response));
-    }
-    const loadData3 =(queryString)=> {
-        
-        setLoadingSub3(true);
-        getProducts3({des:queryString})
-        .then((response) => {
-            
-            setProducts3(response);
+                addNewProductList()
 
-            setLoadingSub3(false);
-          
+                
+                }
+            )          
       })
       .catch((response) => handleAxiosError(response));
     }
 
+    const loadData = async (relIndex, providerId, queryString)=>  {
+        console.log ("updating "+ providerId);
+        setLoading(true);
 
+        await getProductsNew({des:queryString,prov:providerId})
+        .then((response) => {
+            
+            setProductsNew((prevValue) => 
+                prevValue.map((element,index) => {
+                    // eslint-disable-next-line
+                    if (index==relIndex){
+                        return response
+                    }else{
+                        return element;
+                    }             
+                })
+             );    
+             setLoading(false);
+         
+      })
+      .catch((response) => handleAxiosError(response));
+    }
+
+   
+   
 
 
     const handleSubmit=(e)=>{
         e.preventDefault();
-        loadData(queryString);
-        loadData2(queryString);
-        loadData3(queryString);
+        providers.forEach((each,index)=>{
+             loadData(index,providers[index].id,queryString);
+        })
     }
 
     const handleChangeQuery = (event) => {
@@ -116,17 +132,7 @@ function Results() {
         //let errorToDisplay = "OCURRIO UN ERROR! VERIFIQUE NUEVAMENTE A LA BREVEDAD";
         console.log("HANDLEAXIOSERROR");
         console.log(response);
-            // eslint-disable-next-line
-        if (response.response.data.code==1062 ) {
-              //errorToDisplay = "EL QSO YA EXISTE EN NUESTRA BASE DE DATOS.";
-            }
-        // eslint-disable-next-line
-        if (response.message=="Network Error") {
-          //errorToDisplay = "Error de red!. Reintente a la brevedad";
-        }
-    
-        //setError(errorToDisplay);
-        //notifyError(errorToDisplay);
+        
       }
 
 
@@ -145,99 +151,89 @@ function Results() {
                     </div>
                     </div>);
         }else{
-            if (products.length===0){
+            if (productsNew.length===0){
                 return (<div class="card p-5 mt-3">
                             <h5>NO HAY CONCIDENCIAS PARA TU BUSQUEDA...</h5>
                             <p>Cambia los parámetros de busqueda para lograr otra respuesta!</p></div>);
             }else{
         
-                return (
+                return(
                     <div>
+                        {productsNew.map((eachProdList,index)=>{
+                            // eslint-disable-next-line
+                            if (eachProdList.length==0){
+                                return (<div>NO HAY RESULTADOS</div>);
+                            }else{
+                        return (
+                            
 
-                    <div><img src={ckfImage} alt="SKF" style={{ height: "60px" }}/></div>
-                    <table class="table striped hover bordered responsive mt-3 border">
-                        <thead>
-                            <tr class="table-primary">
-                                {products.titles.map((each) =>{
-                                    return (
-                                        <th scope="col" class="text-center">{each}</th>
-                                    );
-                                })}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {products.products.map((each) =>{
-                                return ( 
-                                    <tr>
-                                        <td class="text-center">{each.code}</td>
-                                        <td class="text-center">{each.description}</td>
-                                        <td class="text-center">{each.price.toLocaleString('es-AR', { style: 'currency', currency: 'ARS' })}</td>
-                                        <td class="text-center">{(each.price*0.61*1.21*1.40).toLocaleString('es-AR', { style: 'currency', currency: 'ARS' })}</td>
-                                        <td class="text-center">{each.typeQty}</td>
-                                    </tr>
-                                )
-                            }   )}
-                        </tbody>
-                    </table>
-                    
-                
-                    <div><img src={ferriplastImage} alt="FERRIPLAST" style={{ height: "60px" }} /></div>
-                    <table class="table striped hover bordered responsive mt-3 border">
-                        <thead>
-                            <tr class="table-primary">
-                                {products2.titles.map((each) =>{
-                                    return (
-                                        <th scope="col" class="text-center">{each}</th>
-                                    );
-                                })}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {products2.products.map((each) =>{
-                                return ( 
-                                    <tr>
-                                        <td class="text-center">{each.code}</td>
-                                        <td class="text-center">{each.description}</td>
-                                        <td class="text-center">{each.price.toLocaleString('es-AR', { style: 'currency', currency: 'ARS' })}</td>
-                                        <td class="text-center">{(each.price*0.5*1.21*1.40).toLocaleString('es-AR', { style: 'currency', currency: 'ARS' })}</td>
-                                        <td class="text-center">{each.typeQty}</td>
-                                    </tr>
-                                )
-                            }   )}
-                        </tbody>
-                    </table>
+                            <div>
+                            <div><img src={"/images/"+providers[index].image} alt={providers[index].name} style={{ height: "60px" }} /></div>
+                                <table class="table striped hover bordered responsive mt-3 border">
+                                    <thead>
+                                        <tr class="table-primary">
+                                            {eachProdList && eachProdList.titles.map((each) =>{
+                                                return (
+                                                    <th scope="col" class="text-center">{each}</th>
+                                                );
+                                            })}
+                                            <th scope="col" class="text-center">PRECIO CLIENTE</th>
+                                                    
+                                                  
+                                                    
 
-                    <div><img src={tangoImage} alt="TANGO" style={{ height: "60px" }} /></div>
-                    <table class="table striped hover bordered responsive mt-3 border">
-                        <thead>
-                            <tr class="table-primary">
-                                {products3.titles.map((each) =>{
-                                    return (
-                                        <th scope="col" class="text-center">{each}</th>
-                                    );
-                                })}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {products3.products.map((each) =>{
-                                return ( 
-                                    <tr>
-                                        <td class="text-center">{each.code}</td>
-                                        <td class="text-center">{each.description}</td>
-                                        <td class="text-center">{each.price.toLocaleString('es-AR', { style: 'currency', currency: 'ARS' })}</td>
-                                        <td class="text-center">{(each.price*0.6251*1.21*1.4).toLocaleString('es-AR', { style: 'currency', currency: 'ARS' })}</td>
-                                        <td class="text-center">{each.typeQty}</td>
-                                    </tr>
-                                )
-                            }   )}
-                        </tbody>
-                    </table>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {eachProdList &&  eachProdList.products.map((each) =>{
+                                            return(
+                                                <tr>
+                                            {Object.entries(each).map(([name,value])=>{
+                                                
+                                                
+                                                    // eslint-disable-next-line    
+                                                    if (name=="price"){
+                                                        return(<td class="text-center">{(value).toLocaleString('es-AR', { style: 'currency', currency: 'ARS' })}</td>);
+
+                                                    }else{
+                                                        return(<td class="text-center">{value}</td>);
+                                                    }
+                                                    
+                                                
+
+                                            }
+                                            
+                                            )}
+                                            <td class="text-center">{(calculate(each.price,providers[index].calc)).toLocaleString('es-AR', { style: 'currency', currency: 'ARS' })}</td>
+                                            </tr>
+                                            /*
+                                            return ( 
+                                                <tr>
+                                                    <td class="text-center">{each.code}</td>
+                                                    <td class="text-center">{each.description}</td>
+                                                    <td class="text-center">{each.price.toLocaleString('es-AR', { style: 'currency', currency: 'ARS' })}</td>
+                                                    <td class="text-center">{(each.price*0.6251*1.21*1.4).toLocaleString('es-AR', { style: 'currency', currency: 'ARS' })}</td>
+                                                    <td class="text-center">{each.typeQty}</td>
+                                                </tr>
+                                            )*/
+
+                                            )
+                                        }   )}
+                                    </tbody>
+                                </table>
+                                </div>
+                        )
+                            }
+                    })}
                     </div>
                 );
+                    
             }
-      }
+   
+        }
+    }
         
-     }
+    
      
 
     return (
