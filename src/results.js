@@ -118,9 +118,11 @@ function Results() {
 
     const handleSubmit=(e)=>{
         e.preventDefault();
-        providers.forEach((each,index)=>{
-             loadData(index,providers[index].id,queryString);
-        })
+        if (queryString.length>1){
+            providers.forEach((each,index)=>{
+                loadData(index,providers[index].id,queryString);
+            })
+        }
     }
 
     const handleChangeQuery = (event) => {
@@ -174,7 +176,7 @@ function Results() {
                                 <table class="table striped hover bordered responsive mt-3 border">
                                     <thead>
                                         <tr class="table-primary">
-                                            {eachProdList && eachProdList.titles.map((each) =>{
+                                            {eachProdList && eachProdList.titles && eachProdList.titles.map((each) =>{
                                                 return (
                                                     <th scope="col" class="text-center">{each}</th>
                                                 );
@@ -187,7 +189,7 @@ function Results() {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {eachProdList &&  eachProdList.products.map((each) =>{
+                                        {eachProdList &&  eachProdList.products && eachProdList.products.map((each) =>{
                                             return(
                                                 <tr>
                                             {Object.entries(each).map(([name,value])=>{
