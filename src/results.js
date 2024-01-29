@@ -158,7 +158,6 @@ function Results() {
                         
                         {productsNew.map((eachProdList,index)=>{
                             // eslint-disable-next-line
-                            
                             if (eachProdList.length==0 ){
                                 return (
                                     <div>
